@@ -1,0 +1,27 @@
+import urllib.request
+import re
+
+def fetch_latest_stories(url):
+    # Fetch the content of the URL
+    response = urllib.request.urlopen(url)
+    html = response.read().decode('utf-8')
+
+    # Regular expression to find article titles (you might need to adjust this based on the actual HTML structure)
+    pattern = r'<a[^>]*class="headline"[^>]*>(.*?)</a>'
+    matches = re.findall(pattern, html, re.DOTALL)
+
+    # Clean up the titles and limit to the first 6 stories
+    stories = [re.sub(r'<[^>]+>', '', match).strip() for match in matches]
+    latest_stories = stories[:6]
+
+    return latest_stories
+
+def main():
+    url = 'https://time.com'
+    stories = fetch_latest_stories(url)
+    print("Latest 6 Stories:")
+    for i, story in enumerate(stories, 1):
+        print(f"{i}. {story}")
+
+if __name__ == "__main__":
+    main()
